@@ -7,25 +7,44 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { PACKAGE_ID, MODULE_NAME } from "@/app/config"
 import { ExternalLink, Loader2, Trophy } from "lucide-react"
+import { SubmissionDetailsModal } from "@/components/submission-details-modal"
 
 const AGGREGATOR_URL = "https://aggregator.walrus-testnet.walrus.space"
 
 interface Submission {
   submitter: string
   blobId: string
+  metadataBlobId?: string
   timestamp: number
+  submissionNo?: number
+  txDigest?: string
 }
 
 interface SubmissionListProps {
   bountyId: string
+  bountyTitle?: string
+  bountyCreator?: string
+  isBountyActive?: boolean
+  prizeSchedule?: number[]
   isCreator?: boolean
   onAward?: (submitter: string) => void
   isAwarding?: boolean
 }
 
-export function SubmissionList({ bountyId, isCreator, onAward, isAwarding }: SubmissionListProps) {
+export function SubmissionList({
+  bountyId,
+  bountyTitle,
+  bountyCreator,
+  isBountyActive,
+  prizeSchedule,
+  isCreator,
+  onAward,
+  isAwarding,
+}: SubmissionListProps) {
   const [submissions, setSubmissions] = useState<Submission[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selected, setSelected] = useState<Submission | null>(null)
   const client = useSuiClient()
 
   useEffect(() => {
@@ -46,8 +65,11 @@ export function SubmissionList({ bountyId, isCreator, onAward, isAwarding }: Sub
             return {
               bountyId: parsed.bounty_id,
               submitter: parsed.submitter,
-              blobId: parsed.offchain_bounty_id, // We stored blobId here in submit page
-              timestamp: Number(parsed.submitted_at)
+              blobId: parsed.proof_url, 
+              metadataBlobId: parsed.metadata_url,
+              submissionNo: parsed.submission_no ? Number(parsed.submission_no) : undefined,
+              timestamp: Number(parsed.submitted_at),
+              txDigest: (event as any).id?.txDigest || (event as any).txDigest
             }
           })
           .filter(s => s.bountyId === bountyId)
@@ -77,8 +99,38 @@ export function SubmissionList({ bountyId, isCreator, onAward, isAwarding }: Sub
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <SubmissionDetailsModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        submission={
+          selected
+            ? {
+                bountyId,
+                bountyTitle,
+                bountyCreator,
+                isBountyActive,
+                prizeSchedule,
+                isCreator,
+                onSelectWinner: onAward,
+                submitter: selected.submitter,
+                submissionNo: selected.submissionNo,
+                proofBlobId: selected.blobId,
+                metadataBlobId: selected.metadataBlobId,
+                submittedAt: selected.timestamp,
+                txDigest: selected.txDigest,
+              }
+            : null
+        }
+      />
       {submissions.map((sub, idx) => (
-        <Card key={idx} className="bg-white/5 border-white/10 overflow-hidden">
+        <Card
+          key={idx}
+          className="bg-white/5 border-white/10 overflow-hidden cursor-pointer"
+          onClick={() => {
+            setSelected(sub)
+            setIsModalOpen(true)
+          }}
+        >
           <div className="aspect-video bg-black/50 relative group">
             {/* We assume it's an image for the hackathon. 
                 In a real app, we'd check content-type or metadata */}
@@ -96,6 +148,7 @@ export function SubmissionList({ bountyId, isCreator, onAward, isAwarding }: Sub
                 href={`${AGGREGATOR_URL}/v1/blobs/${sub.blobId}`} 
                 target="_blank" 
                 rel="noreferrer"
+                onClick={(e) => e.stopPropagation()}
               >
                 <Button variant="secondary" size="sm">
                   <ExternalLink className="h-4 w-4 mr-2" />
@@ -124,7 +177,10 @@ export function SubmissionList({ bountyId, isCreator, onAward, isAwarding }: Sub
             {isCreator && onAward && (
               <Button 
                 className="w-full bg-brand-orange hover:bg-brand-orange/90 text-black font-bold"
-                onClick={() => onAward(sub.submitter)}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onAward(sub.submitter)
+                }}
                 disabled={isAwarding}
               >
                 {isAwarding ? (

@@ -25,16 +25,16 @@ public fun test_create_bounty(scenario: &mut Scenario) {
 
     let prizes = vector[60, 40]; // 1st: 60, 2nd: 40
 
-    let cap = didit::create_bounty(
+    didit::create_bounty(
       &mut registry,
       string::utf8(b"bounty-123"),
       string::utf8(b"Title"),
       string::utf8(b"Desc"),
       funding,
       prizes,
+      0,
       test_scenario::ctx(scenario),
     );
-    transfer::public_transfer(cap, creator);
 
     test_scenario::return_shared(registry);
   };
@@ -46,6 +46,7 @@ fun test_flow() {
   let creator = @0xB;
   let submitter1 = @0xC;
   let submitter2 = @0xD;
+  let voter = @0xE;
 
   let mut scenario = test_scenario::begin(admin);
 
@@ -60,6 +61,7 @@ fun test_flow() {
       &mut bounty,
       string::utf8(b"proof-1"),
       string::utf8(b"url-1"),
+      string::utf8(b"meta-1"),
       test_scenario::ctx(&mut scenario),
     );
     test_scenario::return_shared(bounty);
@@ -72,12 +74,23 @@ fun test_flow() {
       &mut bounty,
       string::utf8(b"proof-2"),
       string::utf8(b"url-2"),
+      string::utf8(b"meta-2"),
       test_scenario::ctx(&mut scenario),
     );
     test_scenario::return_shared(bounty);
   };
 
-  // 3. Award Bounties
+  // 3. Vote (community action)
+  test_scenario::next_tx(&mut scenario, voter);
+  {
+    let mut bounty = test_scenario::take_shared<Bounty>(&scenario);
+    didit::vote_submission(&mut bounty, submitter1, test_scenario::ctx(&mut scenario));
+    // change vote to submitter2
+    didit::vote_submission(&mut bounty, submitter2, test_scenario::ctx(&mut scenario));
+    test_scenario::return_shared(bounty);
+  };
+
+  // 4. Award Bounties
   test_scenario::next_tx(&mut scenario, creator);
   {
     let mut bounty = test_scenario::take_shared<Bounty>(&scenario);
@@ -105,7 +118,7 @@ fun test_flow() {
     test_scenario::return_to_sender(&scenario, cap);
   };
 
-  // 4. Verify Balances
+  // 5. Verify Balances
   test_scenario::next_tx(&mut scenario, submitter1);
   {
     let coin = test_scenario::take_from_sender<Coin<SUI>>(&scenario);

@@ -1,124 +1,163 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Sparkles, Trophy, Users, Star, Rocket } from "lucide-react"
+import { useState } from "react"
 import Link from "next/link"
+import { Rocket, Megaphone, Briefcase, CheckCircle, Zap, DollarSign } from "lucide-react"
 import { CreateTaskModal } from "@/components/create-task-modal"
 
 export default function HomePage() {
   const [showCreateModal, setShowCreateModal] = useState(false)
-  const [heroWord, setHeroWord] = useState("Silly")
-  
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setHeroWord(prev => prev === "Silly" ? "Devving" : "Silly")
-    }, 2000)
-    return () => clearInterval(interval)
-  }, [])
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "var(--color-dark)" }}>
-      {/* Hero Section */}
-      <div className="flex flex-col items-center justify-center min-h-[calc(100vh-5rem)] px-4 sm:px-6 text-center py-12 md:py-0">
-        <div className="max-w-4xl space-y-6 md:space-y-8">
-          {/* Main Heading */}
-          <div className="space-y-2 md:space-y-4">
-            <h1 className="text-5xl sm:text-7xl md:text-9xl font-black text-white leading-tight">
-              Get <span className="animate-pulse text-brand-green inline-block min-w-[180px] sm:min-w-[300px]">{heroWord}</span>,
-            </h1>
-            <h2 className="text-4xl sm:text-6xl md:text-8xl font-black text-brand-orange leading-tight">Get Paid!</h2>
+    <div className="relative overflow-x-hidden min-h-screen bg-didit-background-light dark:bg-didit-background-dark font-display text-slate-900 dark:text-white">
+      {/* Background Decor */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full hero-gradient pointer-events-none -z-10"></div>
+
+      <main className="max-w-[1280px] mx-auto px-6 lg:px-40 pb-20">
+        {/* HeroSection */}
+        <section className="py-20 lg:py-32 flex flex-col items-center text-center">
+          <div className="mb-6 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-didit-primary/10 border border-didit-primary/20">
+            <span className="size-2 rounded-full bg-didit-primary animate-pulse"></span>
+            <span className="text-xs font-bold text-didit-primary uppercase tracking-widest">Live on Sui Network</span>
           </div>
-
-          {/* Subtitle */}
-          <p className="text-lg sm:text-2xl md:text-3xl text-white/90 font-light max-w-3xl mx-auto leading-relaxed px-2">
-            Turn your wildest, silliest ideas into crypto bounties.
-            <span className="text-brand-orange font-semibold"> Create bounties</span>,
-            <span className="text-brand-green font-semibold"> compete with friends</span>, and
-            <span className="text-white font-semibold"> earn real rewards!</span>
+          <h1 className="text-6xl md:text-8xl font-black mb-6 tracking-tighter">
+            Did <span className="text-didit-primary">It?</span>
+          </h1>
+          <p className="max-w-2xl text-lg md:text-xl text-slate-400 mb-10 leading-relaxed">
+            The premier Web3 bounty marketplace on Sui. <br className="hidden md:block" />
+            Complete tasks, build reputation, and earn instant rewards.
           </p>
-
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center pt-6 md:pt-8 w-full sm:w-auto">
-            <Button
-              onClick={() => setShowCreateModal(true)}
-              className="w-full sm:w-auto group relative bg-brand-orange hover:opacity-90 text-black font-black text-base md:text-xl px-6 py-3 md:px-12 md:py-6 rounded-2xl shadow-2xl transition-all duration-300 hover:scale-105 transform btn-mobile-responsive"
-            >
-              <Rocket className="h-5 w-5 md:h-6 md:w-6 mr-3 group-hover:animate-bounce" />
-              CREATE EPIC BOUNTY
-            </Button>
-
-            <Link href="/bounties" className="w-full sm:w-auto">
-              <Button className="w-full sm:w-auto bg-brand-green hover:opacity-90 text-black font-bold text-base md:text-xl px-6 py-3 md:px-12 md:py-6 rounded-2xl shadow-xl transition-all duration-300 hover:scale-105 btn-mobile-responsive">
-                <Star className="h-5 w-5 md:h-6 md:w-6 mr-3" />
+          <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
+            <Link href="/bounties">
+              <button className="bg-didit-primary text-didit-background-dark px-10 py-4 rounded-full text-lg font-bold hover:scale-105 transition-transform shadow-[0_0_30px_rgba(242,127,13,0.4)]">
                 Browse Bounties
-              </Button>
+              </button>
+            </Link>
+            <button 
+              onClick={() => setShowCreateModal(true)}
+              className="bg-white/5 border border-white/10 hover:bg-white/10 px-10 py-4 rounded-full text-lg font-bold transition-all backdrop-blur-sm"
+            >
+              Create Bounty
+            </button>
+          </div>
+        </section>
+
+        {/* Section Header: Who Is This For? */}
+        <section className="py-12">
+          <div className="flex items-center justify-between mb-10">
+            <h2 className="text-3xl font-bold tracking-tight">Who Is This For?</h2>
+            <div className="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent ml-8"></div>
+          </div>
+          {/* Glassmorphism Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Card 1 */}
+            <div className="glass-card p-8 rounded-xl group hover:border-didit-primary/50 transition-all duration-300">
+              <div className="size-14 rounded-full bg-didit-primary/20 flex items-center justify-center mb-6 text-didit-primary group-hover:scale-110 transition-transform">
+                <Rocket className="w-8 h-8" />
+              </div>
+              <h3 className="text-xl font-bold mb-3">Meme Projects</h3>
+              <p className="text-slate-400 mb-8 leading-relaxed">Engage your community with viral tasks, raids, and creative challenges.</p>
+              <button onClick={() => setShowCreateModal(true)} className="w-full py-3 rounded-full bg-white/5 border border-white/10 hover:bg-didit-primary hover:text-didit-background-dark font-bold transition-all">Launch</button>
+            </div>
+            {/* Card 2 */}
+            <div className="glass-card p-8 rounded-xl group hover:border-didit-primary/50 transition-all duration-300">
+              <div className="size-14 rounded-full bg-didit-primary/20 flex items-center justify-center mb-6 text-didit-primary group-hover:scale-110 transition-transform">
+                <Megaphone className="w-8 h-8" />
+              </div>
+              <h3 className="text-xl font-bold mb-3">KOLs & Influencers</h3>
+              <p className="text-slate-400 mb-8 leading-relaxed">Monetize your reach through verified engagement and partner collaborations.</p>
+              <button onClick={() => setShowCreateModal(true)} className="w-full py-3 rounded-full bg-white/5 border border-white/10 hover:bg-didit-primary hover:text-didit-background-dark font-bold transition-all">Launch</button>
+            </div>
+            {/* Card 3 */}
+            <div className="glass-card p-8 rounded-xl group hover:border-didit-primary/50 transition-all duration-300">
+              <div className="size-14 rounded-full bg-didit-primary/20 flex items-center justify-center mb-6 text-didit-primary group-hover:scale-110 transition-transform">
+                <Briefcase className="w-8 h-8" />
+              </div>
+              <h3 className="text-xl font-bold mb-3">Task Marketplace</h3>
+              <p className="text-slate-400 mb-8 leading-relaxed">Find work and get paid instantly in SUI. Build your on-chain resume.</p>
+              <button onClick={() => setShowCreateModal(true)} className="w-full py-3 rounded-full bg-white/5 border border-white/10 hover:bg-didit-primary hover:text-didit-background-dark font-bold transition-all">Launch</button>
+            </div>
+          </div>
+        </section>
+
+        {/* Section Header: How It Works */}
+        <section className="py-20">
+          <div className="flex items-center justify-between mb-16">
+            <h2 className="text-3xl font-bold tracking-tight">How It Works</h2>
+            <div className="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent ml-8"></div>
+          </div>
+          <div className="relative grid grid-cols-1 md:grid-cols-3 gap-12">
+            {/* Connecting Line (Desktop) */}
+            <div className="hidden md:block absolute top-10 left-[15%] right-[15%] h-px bg-white/10 -z-10"></div>
+            {/* Step 1 */}
+            <div className="flex flex-col items-center text-center">
+              <div className="size-20 rounded-full glass-card border-didit-primary/40 flex items-center justify-center text-2xl font-black mb-8 shadow-[0_0_20px_rgba(242,127,13,0.2)]">
+                01
+              </div>
+              <h4 className="text-xl font-bold mb-3">Create</h4>
+              <p className="text-slate-400">Post a bounty with specific requirements and deposit SUI rewards into our secure contract.</p>
+            </div>
+            {/* Step 2 */}
+            <div className="flex flex-col items-center text-center">
+              <div className="size-20 rounded-full glass-card border-didit-primary/40 flex items-center justify-center text-2xl font-black mb-8 shadow-[0_0_20px_rgba(242,127,13,0.2)]">
+                02
+              </div>
+              <h4 className="text-xl font-bold mb-3">Submit</h4>
+              <p className="text-slate-400">Contributors complete tasks and submit proof of work directly through the on-chain dashboard.</p>
+            </div>
+            {/* Step 3 */}
+            <div className="flex flex-col items-center text-center">
+              <div className="size-20 rounded-full glass-card border-didit-accent-green/40 flex items-center justify-center text-2xl font-black mb-8 shadow-[0_0_20px_rgba(57,255,20,0.2)] text-didit-accent-green">
+                03
+              </div>
+              <h4 className="text-xl font-bold mb-3">Get Paid</h4>
+              <p className="text-slate-400">Once approved, smart contracts release funds instantly to your wallet. No delays, no fees.</p>
+            </div>
+          </div>
+        </section>
+
+        {/* Featured Bounties (Extra Component) */}
+        <section className="py-12 glass-card rounded-3xl p-8 lg:p-12 relative overflow-hidden">
+          <div className="absolute -top-24 -right-24 size-64 bg-didit-primary/20 blur-[100px] rounded-full"></div>
+          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div>
+              <h2 className="text-3xl font-bold mb-2">Ready to start earning?</h2>
+              <p className="text-slate-400">Over 500+ active bounties waiting for your contribution.</p>
+            </div>
+            <Link href="/bounties">
+              <button className="bg-didit-primary text-didit-background-dark px-10 py-4 rounded-full text-lg font-bold hover:scale-105 transition-transform whitespace-nowrap">
+                Explore Marketplace
+              </button>
             </Link>
           </div>
+        </section>
+      </main>
 
-          {/* Feature Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-12 md:pt-16 max-w-5xl mx-auto w-full">
-            <Card className="bg-white/5 backdrop-blur-lg border border-white/10 hover:border-brand-orange/50 transition-all duration-300 hover:scale-105">
-              <CardContent className="p-6 md:p-8 text-center">
-                <div className="w-14 h-14 md:w-16 md:h-16 bg-brand-orange rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Sparkles className="h-6 w-6 md:h-8 md:w-8 text-black" />
-                </div>
-                <h3 className="text-xl md:text-2xl font-bold text-white mb-2 md:mb-3">Create Silly Tasks</h3>
-                <p className="text-white/80 text-sm md:text-base">Dream up the most ridiculous bounties and watch people compete!</p>
-              </CardContent>
-            </Card>
-
-
-            <Card className="bg-white/5 backdrop-blur-lg border border-white/10 hover:border-brand-green/50 transition-all duration-300 hover:scale-105">
-              <CardContent className="p-6 md:p-8 text-center">
-                <div className="w-14 h-14 md:w-16 md:h-16 bg-brand-green rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Users className="h-6 w-6 md:h-8 md:w-8 text-black" />
-                </div>
-                <h3 className="text-xl md:text-2xl font-bold text-white mb-2 md:mb-3">Join the Fun</h3>
-                <p className="text-white/80 text-sm md:text-base">Upload photos & videos of your attempts and compete for rewards!</p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-white/5 backdrop-blur-lg border border-white/10 hover:border-white/30 transition-all duration-300 hover:scale-105">
-              <CardContent className="p-6 md:p-8 text-center">
-                <div className="w-14 h-14 md:w-16 md:h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Trophy className="h-6 w-6 md:h-8 md:w-8 text-brand-green" />
-                </div>
-                <h3 className="text-xl md:text-2xl font-bold text-white mb-2 md:mb-3">Earn Crypto</h3>
-                <p className="text-white/80 text-sm md:text-base">Win real SUI tokens for being wonderfully ridiculous!</p>
-              </CardContent>
-            </Card>
+      {/* Footer */}
+      <footer className="border-t border-white/5 py-12 px-6 lg:px-40">
+        <div className="max-w-[1280px] mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+          <div className="flex items-center gap-3">
+            <div className="size-6 text-didit-primary">
+              <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+                <path d="M24 0.757355L47.2426 24L24 47.2426L0.757355 24L24 0.757355ZM21 35.7574V12.2426L9.24264 24L21 35.7574Z" fill="currentColor"></path>
+              </svg>
+            </div>
+            <h2 className="text-xl font-bold tracking-tight">didit</h2>
           </div>
-
-          {/* Stats */}
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-8 sm:gap-12 pt-12 text-center">
-            <div>
-              <div className="text-3xl md:text-4xl font-black text-brand-orange">2.5K+</div>
-              <div className="text-white/70 font-medium text-sm md:text-base">Silly Challenges</div>
-            </div>
-            <div>
-              <div className="text-3xl md:text-4xl font-black text-brand-green">8.9K+</div>
-              <div className="text-white/70 font-medium text-sm md:text-base">Happy Participants</div>
-            </div>
-            <div>
-              <div className="text-3xl md:text-4xl font-black text-white">₿ 45K</div>
-              <div className="text-white/70 font-medium text-sm md:text-base">Rewards Paid</div>
-            </div>
+          <div className="flex gap-8 text-sm text-slate-500 font-medium">
+            <Link href="#" className="hover:text-didit-primary transition-colors">Twitter (X)</Link>
+            <Link href="#" className="hover:text-didit-primary transition-colors">Discord</Link>
+            <Link href="#" className="hover:text-didit-primary transition-colors">Documentation</Link>
+          </div>
+          <div className="flex items-center gap-2 px-4 py-2 bg-white/5 rounded-full border border-white/10">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Powered by</span>
+            <span className="font-bold text-sm">SUI Network</span>
           </div>
         </div>
-      </div>
-
-      {/* Floating Action Button */}
-      <div className="fixed bottom-4 right-4 md:bottom-8 md:right-8 z-50">
-        <Button
-          onClick={() => setShowCreateModal(true)}
-          className="w-16 h-16 md:w-20 md:h-20 bg-brand-orange hover:opacity-90 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 animate-pulse"
-        >
-          <span className="text-2xl md:text-3xl">🎯</span>
-        </Button>
-      </div>
-
+        <div className="mt-8 text-center text-xs text-slate-600">
+          © 2024 didit. All rights reserved. Built for the future of Web3 engagement.
+        </div>
+      </footer>
       <CreateTaskModal open={showCreateModal} onOpenChange={setShowCreateModal} />
     </div>
   )

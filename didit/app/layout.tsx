@@ -1,24 +1,10 @@
 'use client'
 
-// import { Nunito_Sans, Roboto } from 'next/font/google'
 import './globals.css'
 import { createNetworkConfig, SuiClientProvider, WalletProvider } from '@mysten/dapp-kit'
 import { getFullnodeUrl } from '@mysten/sui/client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import '@mysten/dapp-kit/dist/index.css'
-
-// const nunito = Nunito_Sans({ 
-//   subsets: ['latin'],
-//   display: 'swap',
-//   variable: '--font-nunito',
-// })
-
-// const roboto = Roboto({
-//   weight: ['100', '300', '400', '500', '700', '900'],
-//   subsets: ['latin'],
-//   display: 'swap',
-//   variable: '--font-roboto',
-// })
 
 // Config options for the networks you want to connect to
 const { networkConfig } = createNetworkConfig({
@@ -36,8 +22,18 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={`font-sans antialiased`}>
+    <html lang="en" className="dark">
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        />
+      </head>
+      <body className="font-display antialiased bg-didit-background-dark text-white">
         <QueryClientProvider client={queryClient}>
           <SuiClientProvider networks={networkConfig} defaultNetwork="testnet">
             <WalletProvider>

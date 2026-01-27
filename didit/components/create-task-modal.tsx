@@ -6,7 +6,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Sparkles, Dice6, Rocket, Plus, Trash2 } from "lucide-react"
+import { Sparkles, Dice6, Rocket, Plus, Trash2, Info } from "lucide-react"
 import { useSignAndExecuteTransaction } from "@mysten/dapp-kit"
 import { Transaction } from "@mysten/sui/transactions"
 
@@ -36,8 +36,18 @@ export function CreateTaskModal({ open, onOpenChange }: CreateTaskModalProps) {
   const [deadlineType, setDeadlineType] = useState<"none" | "date" | "duration">("none")
   const [deadlineValue, setDeadlineValue] = useState("")
   const [prizes, setPrizes] = useState<string[]>([""]) // Start with one empty prize field
+  const [category, setCategory] = useState("Tasks")
+  const [settlementType, setSettlementType] = useState<"creator" | "community">("creator")
   
   const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction()
+
+  const categories = ["Memes", "Content", "Tasks"]
+
+  const categoryInfo: Record<string, string> = {
+    "Memes": "Viral images, funny edits, and internet culture content.",
+    "Content": "Threads, articles, videos, and educational materials.",
+    "Tasks": "Specific actions, testing, feedback, or other clear deliverables."
+  }
 
   const generateRandomIdea = () => {
     const randomIdea = funTaskIdeas[Math.floor(Math.random() * funTaskIdeas.length)]
@@ -96,6 +106,9 @@ export function CreateTaskModal({ open, onOpenChange }: CreateTaskModalProps) {
       // Split coins for funding
       const [coin] = tx.splitCoins(tx.gas, [tx.pure.u64(totalReward)])
 
+      // Append metadata to description since contract doesn't support these fields yet
+      const fullDescription = `${description}\n\n[Category: ${category}]\n[Settlement: ${settlementType === 'community' ? 'Community Voting' : 'Creator Settlement'}]`
+
       // Call create_bounty
       tx.moveCall({
         target: `${PACKAGE_ID}::${MODULE_NAME}::create_bounty`,
@@ -103,7 +116,7 @@ export function CreateTaskModal({ open, onOpenChange }: CreateTaskModalProps) {
           tx.object(REGISTRY_ID), // bountyregistry
           tx.pure.string(crypto.randomUUID()), // offchain_bounty_id
           tx.pure.string(title), // title
-          tx.pure.string(description), // description
+          tx.pure.string(fullDescription), // description
           coin, // funding
           tx.pure.vector("u64", validPrizes), // prize_schedule
           tx.pure.u64(deadlineMs), // deadline_ms
@@ -171,6 +184,81 @@ export function CreateTaskModal({ open, onOpenChange }: CreateTaskModalProps) {
                 onChange={(e) => setTitle(e.target.value)}
                 className="bg-white/10 border-white/30 text-white placeholder:text-white/50 rounded-xl h-14 text-lg backdrop-blur-lg"
               />
+            </div>
+
+            <div>
+              <Label className="text-white text-lg font-bold mb-2 block">
+                Category
+              </Label>
+              <div className="flex flex-wrap gap-2">
+                {categories.map((cat) => (
+                  <div key={cat} className="relative group flex items-center">
+                    <button
+                      type="button"
+                      onClick={() => setCategory(cat)}
+                      className={`px-4 py-2 rounded-full font-bold text-sm transition-all flex items-center gap-2 ${
+                        category === cat
+                          ? "bg-brand-orange text-black shadow-[0_0_10px_rgba(242,127,13,0.4)]"
+                          : "bg-white/5 border border-white/20 text-white hover:bg-white/10"
+                      }`}
+                    >
+                      {cat}
+                      <div className="group/info relative">
+                        <Info className={`h-4 w-4 ${category === cat ? "text-black/50" : "text-white/50"}`} />
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-black/90 border border-white/20 rounded-lg text-xs text-white text-center opacity-0 group-hover/info:opacity-100 transition-opacity pointer-events-none z-50 backdrop-blur-md">
+                          {categoryInfo[cat]}
+                          <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-black/90"></div>
+                        </div>
+                      </div>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <Label className="text-white text-lg font-bold mb-2 block">
+                Settlement Method
+              </Label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div 
+                  onClick={() => setSettlementType("creator")}
+                  className={`cursor-pointer p-4 rounded-xl border transition-all ${
+                    settlementType === "creator" 
+                      ? "bg-white/10 border-brand-orange shadow-[0_0_10px_rgba(242,127,13,0.2)]" 
+                      : "bg-white/5 border-white/10 hover:border-white/30"
+                  }`}
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className={`size-4 rounded-full border flex items-center justify-center ${settlementType === "creator" ? "border-brand-orange" : "border-white/50"}`}>
+                      {settlementType === "creator" && <div className="size-2 rounded-full bg-brand-orange" />}
+                    </div>
+                    <span className="font-bold text-white">Creator Settlement</span>
+                  </div>
+                  <p className="text-xs text-white/60 pl-6">
+                    You manually review submissions and select the winners.
+                  </p>
+                </div>
+
+                <div 
+                  onClick={() => setSettlementType("community")}
+                  className={`cursor-pointer p-4 rounded-xl border transition-all ${
+                    settlementType === "community" 
+                      ? "bg-white/10 border-brand-orange shadow-[0_0_10px_rgba(242,127,13,0.2)]" 
+                      : "bg-white/5 border-white/10 hover:border-white/30"
+                  }`}
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className={`size-4 rounded-full border flex items-center justify-center ${settlementType === "community" ? "border-brand-orange" : "border-white/50"}`}>
+                      {settlementType === "community" && <div className="size-2 rounded-full bg-brand-orange" />}
+                    </div>
+                    <span className="font-bold text-white">Community Voting</span>
+                  </div>
+                  <p className="text-xs text-white/60 pl-6">
+                    The community can select their favorite submission and pick the winner.
+                  </p>
+                </div>
+              </div>
             </div>
 
             <div>

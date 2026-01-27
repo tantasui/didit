@@ -1,12 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Input } from "@/components/ui/input"
-import { Search, Trophy, Users, Clock } from "lucide-react"
+import { Search, Clock, MessageCircle, Share2, Globe } from "lucide-react"
 import Link from "next/link"
 import { CreateTaskModal } from "@/components/create-task-modal"
 import { useSuiClient } from "@mysten/dapp-kit"
@@ -37,14 +32,13 @@ export default function BountiesPage() {
     const fetchBounties = async () => {
       setIsLoading(true)
       try {
-        // 1. Fetch BountyRegistry to get list of bounty IDs
         const registryObj = await client.getObject({
           id: REGISTRY_ID,
           options: { showContent: true }
         })
 
         if (!registryObj.data || !registryObj.data.content || registryObj.data.content.dataType !== "moveObject") {
-          console.error("Invalid registry object")
+          setBounties([])
           return
         }
 
@@ -53,11 +47,9 @@ export default function BountiesPage() {
 
         if (!bountyIds || bountyIds.length === 0) {
           setBounties([])
-          setIsLoading(false)
           return
         }
 
-        // 2. Fetch all Bounty objects
         const bountyObjects = await client.multiGetObjects({
           ids: bountyIds,
           options: { showContent: true }
@@ -68,13 +60,11 @@ export default function BountiesPage() {
             return null
           }
           
-          const fields = obj.data.content.fields
+          const fields = obj.data.content.fields as any
 
-          // Calculate reward from balance (MIST -> SUI)
           let balanceMist = 0
           if (fields.balance) {
             if (typeof fields.balance === 'object' && 'fields' in fields.balance) {
-               // @ts-expect-error - dynamic field access
                balanceMist = Number(fields.balance.fields.value)
             } else {
                balanceMist = Number(fields.balance)
@@ -83,7 +73,6 @@ export default function BountiesPage() {
 
           const rewardSui = balanceMist / 1_000_000_000
 
-          // Calculate time display
           const createdAt = Number(fields.created_at)
           const now = Date.now()
           const diffDays = Math.floor((now - createdAt) / (1000 * 60 * 60 * 24))
@@ -95,24 +84,26 @@ export default function BountiesPage() {
             description: fields.description,
             reward: rewardSui,
             participants: Number(fields.no_of_submissions),
-            status: fields.active ? "open" : "completed", // Simplified status mapping
+            status: fields.active ? "open" : "completed",
             creator: fields.creator.slice(0, 6) + "..." + fields.creator.slice(-4),
             timeLeft: timeDisplay,
-            image: "/placeholder.svg", // Default image as it's not on-chain yet (or in separate object)
-          }
+            image: "/placeholder.svg",
+          } as Bounty
         }).filter((b): b is Bounty => b !== null)
 
+        // Set fetched bounties
         setBounties(fetchedBounties)
 
       } catch (error) {
         console.error("Error fetching bounties:", error)
+        setBounties([])
       } finally {
         setIsLoading(false)
       }
     }
 
     fetchBounties()
-  }, [client, showCreateModal]) // Refetch when modal closes (potentially new bounty)
+  }, [client, showCreateModal])
 
   const statuses = ["all", "open", "judging", "completed"]
 
@@ -120,162 +111,122 @@ export default function BountiesPage() {
     const matchesSearch =
       bounty.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       bounty.description.toLowerCase().includes(searchTerm.toLowerCase())
+    
     const matchesStatus = selectedStatus === "all" || bounty.status === selectedStatus
+    
     return matchesSearch && matchesStatus
   })
 
-  const BountyCard = ({ bounty }: { bounty: Bounty }) => (
-    <Card className="group bg-white/5 backdrop-blur-lg border border-white/10 hover:border-brand-orange/50 transition-all duration-300 hover:scale-[1.02] overflow-hidden">
-      <div className="relative">
-        <img
-          src={bounty.image || "/placeholder.svg"}
-          alt={bounty.title}
-          className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
-        />
-        <div className="absolute top-4 left-4">
-          <Badge
-            className={`${
-              bounty.status === "open"
-                ? "bg-brand-green"
-                : bounty.status === "judging"
-                  ? "bg-brand-orange"
-                  : "bg-white/20"
-            } text-black font-bold`}
-          >
-            {bounty.status === "open" ? "🔥 LIVE" : bounty.status === "judging" ? "⏳ JUDGING" : "✅ DONE"}
-          </Badge>
-        </div>
-        {/* Difficulty Badge removed */}
-        <div className="absolute bottom-4 right-4 bg-brand-orange text-black font-black px-4 py-2 rounded-full">
-          <Trophy className="h-4 w-4 inline mr-1" />
-          {bounty.reward} SUI
-        </div>
-      </div>
-
-      <CardHeader className="pb-3">
-        <CardTitle className="text-white text-xl font-bold group-hover:text-brand-orange transition-colors">
-          {bounty.title}
-        </CardTitle>
-        <p className="text-white/80 text-sm leading-relaxed line-clamp-2">{bounty.description}</p>
-      </CardHeader>
-
-      <CardContent className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4 text-sm">
-            <div className="flex items-center text-white/70">
-              <Users className="h-4 w-4 mr-1" />
-              {bounty.participants}
-            </div>
-            <div className="flex items-center text-white/70">
-              <Clock className="h-4 w-4 mr-1" />
-              {bounty.timeLeft}
-            </div>
-          </div>
-          {/* Category Badge removed */}
-        </div>
-
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <Avatar className="h-8 w-8 border-2 border-white/30">
-              <AvatarFallback className="bg-white/20 text-white font-bold">{bounty.creator[0]}</AvatarFallback>
-            </Avatar>
-            <span className="text-white/80 text-sm font-medium">{bounty.creator}</span>
-          </div>
-          <Link href={`/bounty/${bounty.id}`}>
-            <Button className="bg-brand-green hover:opacity-90 text-black font-bold px-6 py-2 rounded-full shadow-lg transition-all duration-300">
-              Join Now!
-            </Button>
-          </Link>
-        </div>
-      </CardContent>
-    </Card>
-  )
-
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "var(--color-dark)" }}>
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        {/* Header */}
-        <div className="text-center mb-8 md:mb-12">
-          <h1 className="text-4xl md:text-6xl font-black text-white mb-4">Epic Bounties</h1>
-          <p className="text-lg md:text-2xl text-white/80 font-light px-2">
-            Discover wild tasks, compete with friends, and earn crypto rewards!
-          </p>
+    <div className="bg-didit-background-light dark:bg-didit-background-dark font-display text-white min-h-screen">
+      <main className="max-w-7xl mx-auto px-6 py-12">
+        {/* Hero Title */}
+        <div className="mb-10">
+          <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-2">
+            Epic <span className="text-didit-primary italic">Bounties</span>
+          </h1>
+          <p className="text-white/60 text-lg">Contribute to the Sui ecosystem and earn rewards.</p>
         </div>
 
-        {/* Search and Filters */}
-        <div className="flex flex-col lg:flex-row gap-6 mb-8">
-          <div className="relative flex-1">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/50 h-5 w-5" />
-            <Input
-              placeholder="Search for epic bounties..."
+        {/* Search & Filters Container */}
+        <div className="glass p-6 rounded-2xl mb-12 flex flex-col gap-6">
+          {/* Search Bar */}
+          <div className="relative w-full">
+            <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-didit-primary/60">
+              <Search className="h-6 w-6" />
+            </div>
+            <input 
+              className="w-full bg-didit-background-dark/50 border border-white/10 rounded-xl py-4 pl-12 pr-4 text-white placeholder:text-white/30 focus:outline-none focus:border-didit-primary/50 transition-colors" 
+              placeholder="Search by project, task, or keyword..." 
+              type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-12 bg-white/10 border-white/30 text-white placeholder:text-white/50 rounded-2xl h-14 text-base md:text-lg backdrop-blur-lg"
             />
           </div>
-
-          <div className="flex gap-3 flex-wrap">
-            {/* Categories filter removed */}
-          </div>
-
-          {/* Status Filter */}
-          <div className="flex gap-3 flex-wrap">
-            <span className="text-white/70 font-semibold self-center">Status:</span>
+          {/* Categories/Statuses */}
+          <div className="flex flex-wrap gap-3">
             {statuses.map((status) => (
-              <Button
+              <button 
                 key={status}
-                variant={selectedStatus === status ? "default" : "outline"}
                 onClick={() => setSelectedStatus(status)}
-                className={`rounded-full px-6 py-3 font-bold transition-all duration-300 ${
-                  selectedStatus === status
-                    ? "bg-brand-orange text-black shadow-lg"
-                    : "border-white/30 text-white hover:bg-white/10"
+                className={`px-6 py-2 rounded-full font-bold text-sm transition-all capitalize ${
+                  selectedStatus === status 
+                    ? "bg-didit-primary text-didit-background-dark neon-glow" 
+                    : "bg-white/5 border border-white/10 text-white/70 hover:bg-white/10"
                 }`}
               >
-                {status === "all"
-                  ? "🌟 All"
-                  : status === "open"
-                    ? "🔥 Live"
-                    : status === "judging"
-                      ? "⏳ Judging"
-                      : "✅ Completed"}
-              </Button>
+                {status === "all" ? "All" : status}
+              </button>
             ))}
           </div>
         </div>
 
-        {/* Bounties Grid */}
+        {/* Bounty Grid */}
         {isLoading ? (
-           <div className="flex justify-center items-center h-64">
-             <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-brand-orange"></div>
-           </div>
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-didit-primary"></div>
+          </div>
         ) : filteredBounties.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredBounties.map((bounty) => (
-              <BountyCard key={bounty.id} bounty={bounty} />
+              <Link href={`/bounty/${bounty.id}`} key={bounty.id}>
+                <div className="group flex flex-col bg-white/5 border border-white/10 rounded-2xl overflow-hidden card-hover h-full">
+                  <div className="relative aspect-video w-full bg-center bg-cover" style={{ backgroundImage: `url('${bounty.image}')` }}>
+                    <div className="absolute top-4 left-4 flex gap-2">
+                      <span className={`text-didit-background-dark text-[10px] font-black uppercase px-2 py-1 rounded ${bounty.status === 'open' ? 'bg-didit-primary/90' : 'bg-white/90'}`}>
+                        {bounty.status === 'open' ? 'Live' : 'Completed'}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="p-5 flex flex-col grow">
+                    <h3 className="text-xl font-bold mb-2 group-hover:text-didit-primary transition-colors">{bounty.title}</h3>
+                    <p className="text-white/60 text-sm line-clamp-2 mb-6">{bounty.description}</p>
+                    <div className="mt-auto pt-5 border-t border-white/10 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="text-didit-primary font-bold text-lg">{bounty.reward} SUI</span>
+                      </div>
+                      <div className="flex items-center gap-1 text-white/40 text-xs font-medium">
+                        <Clock className="h-4 w-4" />
+                        {bounty.timeLeft}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Link>
             ))}
           </div>
         ) : (
           <div className="text-center py-20 text-white/50 text-xl">
-             No bounties found. Be the first to create one!
+             No bounties found.
           </div>
         )}
 
-        {/* Create Challenge CTA */}
-        <div className="text-center bg-white/5 backdrop-blur-lg border border-white/10 rounded-3xl p-6 md:p-12 mb-8">
-          <h2 className="text-2xl md:text-4xl font-black text-white mb-4">Got a Crazy Idea? 🤪</h2>
-          <p className="text-base md:text-xl text-white/80 mb-6 md:mb-8 max-w-2xl mx-auto">
-            Turn your wildest thoughts into epic bounties! Create something silly and watch the community go wild.
-          </p>
-          <Button
-            onClick={() => setShowCreateModal(true)}
-            className="bg-brand-orange hover:opacity-90 text-black font-black text-lg md:text-2xl px-8 py-4 md:px-16 md:py-6 rounded-2xl shadow-2xl transition-all duration-300 hover:scale-105 w-full sm:w-auto btn-mobile-responsive"
-          >
-            🚀 CREATE EPIC BOUNTY
-          </Button>
+        {/* Pagination/Load More */}
+        <div className="mt-16 flex justify-center">
+          <button className="px-12 py-4 rounded-xl border-2 border-didit-primary/20 hover:border-didit-primary text-didit-primary font-bold transition-all bg-didit-primary/5">
+            Load More Bounties
+          </button>
         </div>
-      </div>
+      </main>
 
+      <footer className="border-t border-white/10 py-12 px-6 mt-20 bg-black/40">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+          <div className="flex items-center gap-3 grayscale opacity-50">
+            <div className="size-6 text-white">
+              <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                <path clipRule="evenodd" d="M24 0.757355L47.2426 24L24 47.2426L0.757355 24L24 0.757355ZM21 35.7574V12.2426L9.24264 24L21 35.7574Z" fill="currentColor" fillRule="evenodd"></path>
+              </svg>
+            </div>
+            <span className="font-bold uppercase tracking-widest text-sm">didit marketplace</span>
+          </div>
+          <p className="text-white/30 text-xs font-medium">Built with precision on the Sui Blockchain. © 2024 didit labs.</p>
+          <div className="flex gap-6 text-white/50">
+            <a href="#" className="hover:text-didit-primary transition-colors"><Globe className="h-5 w-5" /></a>
+            <a href="#" className="hover:text-didit-primary transition-colors"><MessageCircle className="h-5 w-5" /></a>
+            <a href="#" className="hover:text-didit-primary transition-colors"><Share2 className="h-5 w-5" /></a>
+          </div>
+        </div>
+      </footer>
       <CreateTaskModal open={showCreateModal} onOpenChange={setShowCreateModal} />
     </div>
   )

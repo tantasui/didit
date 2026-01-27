@@ -18,6 +18,8 @@ public struct Bounty has key, store {
   creator: address,
   created_at: u64,
   submissions: Table<address, BountyProof>,
+  votes_by_voter: Table<address, address>, // voter -> submission submitter
+  vote_counts: Table<address, u64>, // submission submitter -> votes
   winners: VecMap<u64, address>, // Maps position index -> winner address
   no_of_submissions: u64,
   deadline: u64, // Timestamp in ms. 0 means no deadline.
@@ -46,6 +48,7 @@ public struct BountyProof has key, store {
   submitter: address,
   submission_no: u64,
   proof_url: String,
+  metadata_url: String,
   submitted_at: u64,
 }
 
@@ -57,6 +60,7 @@ public struct SubmissionReceipt has key, store {
   submitter: address,
   submission_no: u64,
   proof_url: String,
+  metadata_url: String,
   submitted_at: u64,
 }
 
@@ -65,6 +69,8 @@ public struct BountyProofSubmitted has copy, drop {
   offchain_bounty_id: String,
   submitter: address,
   submission_no: u64,
+  proof_url: String,
+  metadata_url: String,
   submitted_at: u64,
 }
 
@@ -74,6 +80,14 @@ public struct BountyAwarded has copy, drop {
   position_index: u64,
   amount: u64,
   awarded_at: u64,
+}
+
+public struct SubmissionVoted has copy, drop {
+  bounty_id: ID,
+  submission_address: address,
+  voter: address,
+  total_votes_for_submission: u64,
+  voted_at: u64,
 }
 
 public struct BountyRegistry has key, store {
@@ -134,6 +148,8 @@ public fun create_bounty(
     prize_schedule,
     creator: ctx.sender(),
     submissions: table::new(ctx),
+    votes_by_voter: table::new(ctx),
+    vote_counts: table::new(ctx),
     winners: vec_map::empty(),
     no_of_submissions: 0,
     created_at: ctx.epoch_timestamp_ms(),
@@ -167,6 +183,7 @@ public fun submit_bounty_proof(
   bounty: &mut Bounty,
   offchain_bounty_proof_id: String,
   proof_url: String,
+  metadata_url: String,
   ctx: &mut TxContext,
 ) {
   // Checks
@@ -189,6 +206,7 @@ public fun submit_bounty_proof(
     submitter,
     submission_no,
     proof_url,
+    metadata_url,
     submitted_at: timestamp,
   };
 
@@ -200,6 +218,7 @@ public fun submit_bounty_proof(
     submitter,
     submission_no,
     proof_url,
+    metadata_url,
     submitted_at: timestamp,
   };
 
@@ -211,11 +230,62 @@ public fun submit_bounty_proof(
     offchain_bounty_id: offchain_bounty_proof_id,
     submitter,
     submission_no,
+    proof_url,
+    metadata_url,
     submitted_at: timestamp,
   });
 
   // Transfer the receipt to the user instead of the original submission
   transfer::transfer(receipt, submitter);
+}
+
+public fun vote_submission(
+  bounty: &mut Bounty,
+  submission_address: address,
+  ctx: &mut TxContext,
+) {
+  assert!(bounty.active, 2); // Error 2: Bounty inactive
+  let voter = ctx.sender();
+  assert!(voter != bounty.creator, 5); // Error 5: Creator cannot vote
+  assert!(voter != submission_address, 8); // Error 8: Cannot vote for self
+  if (bounty.deadline > 0) {
+    assert!(ctx.epoch_timestamp_ms() < bounty.deadline, 6); // Error 6: Deadline passed
+  };
+  assert!(table::contains(&bounty.submissions, submission_address), 9); // Error 9: Submission not found
+
+  // If already voted, adjust previous vote count (allows changing vote)
+  if (table::contains(&bounty.votes_by_voter, voter)) {
+    let prev_submission = *table::borrow(&bounty.votes_by_voter, voter);
+    if (prev_submission != submission_address) {
+      if (table::contains(&bounty.vote_counts, prev_submission)) {
+        let prev_count_ref = table::borrow_mut(&mut bounty.vote_counts, prev_submission);
+        if (*prev_count_ref > 0) {
+          *prev_count_ref = *prev_count_ref - 1;
+        };
+      };
+      let voter_ref = table::borrow_mut(&mut bounty.votes_by_voter, voter);
+      *voter_ref = submission_address;
+    };
+  } else {
+    table::add(&mut bounty.votes_by_voter, voter, submission_address);
+  };
+
+  // Increment vote count for this submission
+  if (table::contains(&bounty.vote_counts, submission_address)) {
+    let count_ref = table::borrow_mut(&mut bounty.vote_counts, submission_address);
+    *count_ref = *count_ref + 1;
+  } else {
+    table::add(&mut bounty.vote_counts, submission_address, 1);
+  };
+
+  let new_total = *table::borrow(&bounty.vote_counts, submission_address);
+  event::emit(SubmissionVoted {
+    bounty_id: object::uid_to_inner(&bounty.id),
+    submission_address,
+    voter,
+    total_votes_for_submission: new_total,
+    voted_at: ctx.epoch_timestamp_ms(),
+  });
 }
 
 public fun award_bounty(

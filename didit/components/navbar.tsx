@@ -1,73 +1,58 @@
 "use client"
 
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Zap, ArrowLeft, Menu } from "lucide-react"
 import { WalletConnectButton } from "@/components/wallet-connect-button"
-import { usePathname } from "next/navigation"
 import { useState } from "react"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Button } from "@/components/ui/button"
+import { Menu } from "lucide-react"
 
 export function Navbar() {
-  const pathname = usePathname()
-  const isHome = pathname === "/"
   const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <nav className="border-b border-white/10 backdrop-blur-sm sticky top-0 z-50 bg-[var(--color-dark-80)]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <div className="flex items-center space-x-4">
-            {!isHome && (
-              <Link href="/" className="text-white hover:text-brand-orange transition-colors">
-                <ArrowLeft className="h-6 w-6" />
-              </Link>
-            )}
-            <Link href="/" className="flex items-center space-x-2">
-              <Zap className="h-8 w-8 text-brand-orange" />
-              <span className="text-2xl font-black text-white tracking-tight">DiDit</span>
-            </Link>
+    <header className="sticky top-0 z-50 w-full glass-card border-b border-white/5 px-6 lg:px-40 py-3">
+      <div className="max-w-[1280px] mx-auto flex items-center justify-between">
+        <Link href="/" className="flex items-center gap-3">
+          <div className="size-8 text-didit-primary">
+            <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+              <path clipRule="evenodd" d="M24 0.757355L47.2426 24L24 47.2426L0.757355 24L24 0.757355ZM21 35.7574V12.2426L9.24264 24L21 35.7574Z" fill="currentColor" fillRule="evenodd"></path>
+            </svg>
           </div>
-          
-          {/* Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-4">
-            <Link href="/bounties">
-              <Button variant="ghost" className="text-white hover:text-brand-orange font-bold text-base px-4">
-                Bounties
-              </Button>
-            </Link>
-            <Link href="/profile">
-              <Button variant="ghost" className="text-white hover:text-brand-orange font-bold text-base px-4">
-                Profile
-              </Button>
-            </Link>
-            <div className="scale-100 origin-right">
-              <WalletConnectButton />
-            </div>
+          <h2 className="text-2xl font-bold tracking-tight text-white">didit</h2>
+        </Link>
+
+        <nav className="hidden md:flex items-center gap-10">
+          <Link href="/profile" className="text-sm font-medium hover:text-didit-primary transition-colors text-white">
+            Profile
+          </Link>
+          <Link href="/leaderboard" className="text-sm font-medium hover:text-didit-primary transition-colors text-white">
+            Leaderboard
+          </Link>
+        </nav>
+
+        <div className="flex items-center gap-3">
+          <div className="hidden md:block">
+            <WalletConnectButton className="bg-didit-primary text-didit-background-dark px-6 py-2.5 rounded-full text-sm font-bold hover:brightness-110 transition-all shadow-[0_0_20px_rgba(242,127,13,0.3)] hover:bg-didit-primary border-none h-auto" />
           </div>
 
-          {/* Mobile Menu */}
-          <div className="flex md:hidden items-center space-x-2">
+          <div className="md:hidden flex items-center gap-2">
             <div className="scale-75 origin-right">
-              <WalletConnectButton />
+              <WalletConnectButton className="bg-didit-primary text-didit-background-dark px-6 py-2.5 rounded-full text-sm font-bold hover:brightness-110 transition-all shadow-[0_0_20px_rgba(242,127,13,0.3)] hover:bg-didit-primary border-none h-auto" />
             </div>
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-white hover:text-brand-orange">
+                <Button variant="ghost" size="icon" className="text-white hover:text-didit-primary">
                   <Menu className="h-6 w-6" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="bg-[var(--color-dark)] border-white/10 text-white w-[250px]">
-                <div className="flex flex-col space-y-6 mt-8">
-                  <Link href="/bounties" onClick={() => setIsOpen(false)}>
-                    <Button variant="ghost" className="w-full justify-start text-white hover:text-brand-orange font-bold text-lg">
-                      Bounties
-                    </Button>
+              <SheetContent side="right" className="bg-didit-background-dark border-white/10 text-white w-[260px]">
+                <div className="flex flex-col space-y-6 mt-10">
+                  <Link href="/profile" onClick={() => setIsOpen(false)} className="text-lg font-bold hover:text-didit-primary transition-colors">
+                    Profile
                   </Link>
-                  <Link href="/profile" onClick={() => setIsOpen(false)}>
-                    <Button variant="ghost" className="w-full justify-start text-white hover:text-brand-orange font-bold text-lg">
-                      Profile
-                    </Button>
+                  <Link href="/leaderboard" onClick={() => setIsOpen(false)} className="text-lg font-bold hover:text-didit-primary transition-colors">
+                    Leaderboard
                   </Link>
                 </div>
               </SheetContent>
@@ -75,7 +60,6 @@ export function Navbar() {
           </div>
         </div>
       </div>
-    </nav>
+    </header>
   )
 }
-
