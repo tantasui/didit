@@ -180,7 +180,7 @@ export const WalletConnectButton = ({ className }: ConnectButtonProps = {}) => {
         className
       )}
     >
-      {isConnecting ? "Connecting..." : "Connect Wallet"}
+      {isConnecting ? "Connecting..." : "connect wallet"}
     </Button>
   )
 
@@ -192,7 +192,7 @@ export const WalletConnectButton = ({ className }: ConnectButtonProps = {}) => {
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px] bg-[#1c1c1c] border-white/10 text-white">
           <DialogHeader className="mb-5">
-            <DialogTitle className="text-2xl font-black">Connect Wallet</DialogTitle>
+            <DialogTitle className="text-2xl font-black">connect wallet</DialogTitle>
             <DialogDescription className="text-gray-400">
               Choose a wallet to connect to DiDit.
             </DialogDescription>
@@ -231,7 +231,7 @@ export const WalletConnectButton = ({ className }: ConnectButtonProps = {}) => {
       </DrawerTrigger>
       <DrawerContent className="bg-[#1c1c1c] border-white/10 text-white">
         <DrawerHeader className="text-left">
-          <DrawerTitle className="text-2xl font-black">Connect Wallet</DrawerTitle>
+          <DrawerTitle className="text-2xl font-black">connect wallet</DrawerTitle>
           <DrawerDescription className="text-gray-400">
             Choose a wallet to connect to DiDit.
           </DrawerDescription>

@@ -24,10 +24,10 @@ export function Navbar() {
 
         <nav className="hidden md:flex items-center gap-10">
           <Link href="/profile" className="text-sm font-medium hover:text-didit-primary transition-colors text-white">
-            Profile
+            profile
           </Link>
           <Link href="/leaderboard" className="text-sm font-medium hover:text-didit-primary transition-colors text-white">
-            Leaderboard
+            leaderboard
           </Link>
         </nav>
 
@@ -49,10 +49,10 @@ export function Navbar() {
               <SheetContent side="right" className="bg-didit-background-dark border-white/10 text-white w-[260px]">
                 <div className="flex flex-col space-y-6 mt-10">
                   <Link href="/profile" onClick={() => setIsOpen(false)} className="text-lg font-bold hover:text-didit-primary transition-colors">
-                    Profile
+                    profile
                   </Link>
                   <Link href="/leaderboard" onClick={() => setIsOpen(false)} className="text-lg font-bold hover:text-didit-primary transition-colors">
-                    Leaderboard
+                    leaderboard
                   </Link>
                 </div>
               </SheetContent>

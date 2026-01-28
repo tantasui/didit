@@ -24,20 +24,20 @@ export default function HomePage() {
             Did <span className="text-didit-primary">It?</span>
           </h1>
           <p className="max-w-2xl text-lg md:text-xl text-slate-400 mb-10 leading-relaxed">
-            The premier Web3 bounty marketplace on Sui. <br className="hidden md:block" />
-            Complete tasks, build reputation, and earn instant rewards.
+            onchain bounties for anything. <br className="hidden md:block" />
+            prove you did it. get paid in SUI.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
             <Link href="/bounties">
               <button className="bg-didit-primary text-didit-background-dark px-10 py-4 rounded-full text-lg font-bold hover:scale-105 transition-transform shadow-[0_0_30px_rgba(242,127,13,0.4)]">
-                Browse Bounties
+                browse bounties
               </button>
             </Link>
             <button 
               onClick={() => setShowCreateModal(true)}
               className="bg-white/5 border border-white/10 hover:bg-white/10 px-10 py-4 rounded-full text-lg font-bold transition-all backdrop-blur-sm"
             >
-              Create Bounty
+              create bounty
             </button>
           </div>
         </section>
@@ -45,7 +45,7 @@ export default function HomePage() {
         {/* Section Header: Who Is This For? */}
         <section className="py-12">
           <div className="flex items-center justify-between mb-10">
-            <h2 className="text-3xl font-bold tracking-tight">Who Is This For?</h2>
+            <h2 className="text-3xl font-bold tracking-tight">who uses this?</h2>
             <div className="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent ml-8"></div>
           </div>
           {/* Glassmorphism Grid */}
@@ -55,27 +55,27 @@ export default function HomePage() {
               <div className="size-14 rounded-full bg-didit-primary/20 flex items-center justify-center mb-6 text-didit-primary group-hover:scale-110 transition-transform">
                 <Rocket className="w-8 h-8" />
               </div>
-              <h3 className="text-xl font-bold mb-3">Meme Projects</h3>
-              <p className="text-slate-400 mb-8 leading-relaxed">Engage your community with viral tasks, raids, and creative challenges.</p>
-              <button onClick={() => setShowCreateModal(true)} className="w-full py-3 rounded-full bg-white/5 border border-white/10 hover:bg-didit-primary hover:text-didit-background-dark font-bold transition-all">Launch</button>
+              <h3 className="text-xl font-bold mb-3">meme projects</h3>
+              <p className="text-slate-400 mb-8 leading-relaxed">bounties for raids, memes, and community chaos.</p>
+              <button onClick={() => setShowCreateModal(true)} className="w-full py-3 rounded-full bg-white/5 border border-white/10 hover:bg-didit-primary hover:text-didit-background-dark font-bold transition-all">explore</button>
             </div>
             {/* Card 2 */}
             <div className="glass-card p-8 rounded-xl group hover:border-didit-primary/50 transition-all duration-300">
               <div className="size-14 rounded-full bg-didit-primary/20 flex items-center justify-center mb-6 text-didit-primary group-hover:scale-110 transition-transform">
                 <Megaphone className="w-8 h-8" />
               </div>
-              <h3 className="text-xl font-bold mb-3">KOLs & Influencers</h3>
-              <p className="text-slate-400 mb-8 leading-relaxed">Monetize your reach through verified engagement and partner collaborations.</p>
-              <button onClick={() => setShowCreateModal(true)} className="w-full py-3 rounded-full bg-white/5 border border-white/10 hover:bg-didit-primary hover:text-didit-background-dark font-bold transition-all">Launch</button>
+              <h3 className="text-xl font-bold mb-3">creators & influencers</h3>
+              <p className="text-slate-400 mb-8 leading-relaxed">get your community to do stuff. pay them in SUI.</p>
+              <button onClick={() => setShowCreateModal(true)} className="w-full py-3 rounded-full bg-white/5 border border-white/10 hover:bg-didit-primary hover:text-didit-background-dark font-bold transition-all">explore</button>
             </div>
             {/* Card 3 */}
             <div className="glass-card p-8 rounded-xl group hover:border-didit-primary/50 transition-all duration-300">
               <div className="size-14 rounded-full bg-didit-primary/20 flex items-center justify-center mb-6 text-didit-primary group-hover:scale-110 transition-transform">
                 <Briefcase className="w-8 h-8" />
               </div>
-              <h3 className="text-xl font-bold mb-3">Task Marketplace</h3>
-              <p className="text-slate-400 mb-8 leading-relaxed">Find work and get paid instantly in SUI. Build your on-chain resume.</p>
-              <button onClick={() => setShowCreateModal(true)} className="w-full py-3 rounded-full bg-white/5 border border-white/10 hover:bg-didit-primary hover:text-didit-background-dark font-bold transition-all">Launch</button>
+              <h3 className="text-xl font-bold mb-3">freelancers</h3>
+              <p className="text-slate-400 mb-8 leading-relaxed">find gigs, submit proof, get paid instantly.</p>
+              <button onClick={() => setShowCreateModal(true)} className="w-full py-3 rounded-full bg-white/5 border border-white/10 hover:bg-didit-primary hover:text-didit-background-dark font-bold transition-all">explore</button>
             </div>
           </div>
         </section>
@@ -83,7 +83,7 @@ export default function HomePage() {
         {/* Section Header: How It Works */}
         <section className="py-20">
           <div className="flex items-center justify-between mb-16">
-            <h2 className="text-3xl font-bold tracking-tight">How It Works</h2>
+            <h2 className="text-3xl font-bold tracking-tight">how it works</h2>
             <div className="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent ml-8"></div>
           </div>
           <div className="relative grid grid-cols-1 md:grid-cols-3 gap-12">
@@ -94,24 +94,24 @@ export default function HomePage() {
               <div className="size-20 rounded-full glass-card border-didit-primary/40 flex items-center justify-center text-2xl font-black mb-8 shadow-[0_0_20px_rgba(242,127,13,0.2)]">
                 01
               </div>
-              <h4 className="text-xl font-bold mb-3">Create</h4>
-              <p className="text-slate-400">Post a bounty with specific requirements and deposit SUI rewards into our secure contract.</p>
+              <h4 className="text-xl font-bold mb-3">create</h4>
+              <p className="text-slate-400">post a bounty with your requirements. lock SUI rewards in the contract.</p>
             </div>
             {/* Step 2 */}
             <div className="flex flex-col items-center text-center">
               <div className="size-20 rounded-full glass-card border-didit-primary/40 flex items-center justify-center text-2xl font-black mb-8 shadow-[0_0_20px_rgba(242,127,13,0.2)]">
                 02
               </div>
-              <h4 className="text-xl font-bold mb-3">Submit</h4>
-              <p className="text-slate-400">Contributors complete tasks and submit proof of work directly through the on-chain dashboard.</p>
+              <h4 className="text-xl font-bold mb-3">submit</h4>
+              <p className="text-slate-400">people do the thing and upload proof. everything stored onchain.</p>
             </div>
             {/* Step 3 */}
             <div className="flex flex-col items-center text-center">
               <div className="size-20 rounded-full glass-card border-didit-accent-green/40 flex items-center justify-center text-2xl font-black mb-8 shadow-[0_0_20px_rgba(57,255,20,0.2)] text-didit-accent-green">
                 03
               </div>
-              <h4 className="text-xl font-bold mb-3">Get Paid</h4>
-              <p className="text-slate-400">Once approved, smart contracts release funds instantly to your wallet. No delays, no fees.</p>
+              <h4 className="text-xl font-bold mb-3">get paid</h4>
+              <p className="text-slate-400">creator approves. contract pays out instantly. no middlemen.</p>
             </div>
           </div>
         </section>
@@ -121,12 +121,12 @@ export default function HomePage() {
           <div className="absolute -top-24 -right-24 size-64 bg-didit-primary/20 blur-[100px] rounded-full"></div>
           <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
             <div>
-              <h2 className="text-3xl font-bold mb-2">Ready to start earning?</h2>
-              <p className="text-slate-400">Over 500+ active bounties waiting for your contribution.</p>
+              <h2 className="text-3xl font-bold mb-2">ready to dive in?</h2>
+              <p className="text-slate-400">active bounties waiting for you.</p>
             </div>
             <Link href="/bounties">
               <button className="bg-didit-primary text-didit-background-dark px-10 py-4 rounded-full text-lg font-bold hover:scale-105 transition-transform whitespace-nowrap">
-                Explore Marketplace
+                explore bounties
               </button>
             </Link>
           </div>
