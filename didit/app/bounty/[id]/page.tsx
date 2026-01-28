@@ -272,21 +272,21 @@ export default function BountyDetailPage({ params }: { params: Promise<{ id: str
             <div className="border-b border-white/10 flex gap-10 mt-6">
               <button 
                 onClick={() => setActiveTab("winners")}
-                className={`pb-4 text-sm font-bold tracking-widest uppercase transition-colors ${activeTab === "winners" ? "border-b-2 border-didit-primary text-white" : "border-b-2 border-transparent text-slate-400 hover:text-white"}`}
+                className={`pb-4 text-sm font-bold transition-colors ${activeTab === "winners" ? "border-b-2 border-didit-primary text-white" : "border-b-2 border-transparent text-slate-400 hover:text-white"}`}
               >
-                Winners
+                winners
               </button>
               <button 
                 onClick={() => setActiveTab("submissions")}
-                className={`pb-4 text-sm font-bold tracking-widest uppercase transition-colors ${activeTab === "submissions" ? "border-b-2 border-didit-primary text-white" : "border-b-2 border-transparent text-slate-400 hover:text-white"}`}
+                className={`pb-4 text-sm font-bold transition-colors ${activeTab === "submissions" ? "border-b-2 border-didit-primary text-white" : "border-b-2 border-transparent text-slate-400 hover:text-white"}`}
               >
-                Submissions ({bounty.participants})
+                entries ({bounty.participants})
               </button>
               <button 
                 onClick={() => setActiveTab("rules")}
-                className={`pb-4 text-sm font-bold tracking-widest uppercase transition-colors ${activeTab === "rules" ? "border-b-2 border-didit-primary text-white" : "border-b-2 border-transparent text-slate-400 hover:text-white"}`}
+                className={`pb-4 text-sm font-bold transition-colors ${activeTab === "rules" ? "border-b-2 border-didit-primary text-white" : "border-b-2 border-transparent text-slate-400 hover:text-white"}`}
               >
-                Rules
+                the rules
               </button>
             </div>
 
@@ -414,7 +414,7 @@ export default function BountyDetailPage({ params }: { params: Promise<{ id: str
                 {bounty.status === "open" ? (
                   <>
                     <Upload className="h-5 w-5" />
-                    SUBMIT WORK
+                    submit entry
                   </>
                 ) : (
                   <>

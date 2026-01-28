@@ -170,11 +170,11 @@ export default function SubmitBountyPage({ params }: { params: Promise<{ id: str
                 <ArrowLeft className="h-4 w-4" />
                 <span className="text-sm font-medium uppercase tracking-widest">Back to Bounty Details</span>
               </Link>
-              <h1 className="text-white text-4xl font-black leading-tight tracking-[-0.033em]">
-                Submit Work for: <span className="text-didit-primary italic">{bountyTitle || <Loader2 className="inline h-8 w-8 animate-spin" />}</span>
+              <h1 className="text-white text-3xl md:text-4xl font-bold leading-tight">
+                submit for: <span className="text-didit-primary">{bountyTitle || <Loader2 className="inline h-8 w-8 animate-spin" />}</span>
               </h1>
-              <p className="text-white/60 text-base font-normal leading-normal">
-                Ensure your submission meets all bounty requirements before uploading to the Sui blockchain.
+              <p className="text-white/70 text-base font-normal leading-normal">
+                upload your proof and claim your SUI
               </p>
             </div>
 
@@ -183,9 +183,8 @@ export default function SubmitBountyPage({ params }: { params: Promise<{ id: str
               
               {/* Upload Zone */}
               <div className="flex flex-col">
-                <label className="text-white text-lg font-bold leading-tight mb-4 flex items-center gap-2">
-                  <CloudUpload className="text-didit-primary h-6 w-6" />
-                  Media Assets
+                <label className="text-white text-base font-medium leading-tight mb-4">
+                  your proof
                 </label>
                 <div className="flex flex-col items-center gap-6 rounded-xl border-2 border-dashed border-didit-primary/30 bg-didit-primary/5 px-6 py-14 hover:border-didit-primary/60 transition-all group cursor-pointer relative">
                   <input
@@ -216,12 +215,11 @@ export default function SubmitBountyPage({ params }: { params: Promise<{ id: str
               {/* Description Field */}
               <div className="flex flex-col gap-2">
                 <label className="flex flex-col flex-1">
-                  <p className="text-white text-lg font-bold leading-tight pb-4 flex items-center gap-2">
-                    <FileIcon className="text-didit-primary h-5 w-5" />
-                    Description & Repository Links
+                  <p className="text-white text-base font-medium leading-tight pb-4">
+                    story (optional)
                   </p>
                   <Textarea
-                    placeholder="Explain your approach, tech stack used, and provide links to GitHub or high-res cloud storage assets..."
+                    placeholder="how'd you do it? any behind-the-scenes?"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     disabled={isUploading}
@@ -263,13 +261,13 @@ export default function SubmitBountyPage({ params }: { params: Promise<{ id: str
                     </>
                   ) : (
                     <span className="truncate flex items-center gap-3">
-                      Submit Work
+                      submit entry
                       <Rocket className="h-5 w-5" />
                     </span>
                   )}
                 </Button>
                 <p className="text-center text-white/40 text-xs">
-                  By clicking submit, your work hash will be permanently recorded on the Sui Blockchain.
+                  your submission is stored on Walrus and recorded on Sui
                 </p>
               </div>
 

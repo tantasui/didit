@@ -122,10 +122,10 @@ export default function BountiesPage() {
       <main className="max-w-7xl mx-auto px-6 py-12">
         {/* Hero Title */}
         <div className="mb-10">
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-2">
-            Epic <span className="text-didit-primary italic">Bounties</span>
+          <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-2">
+            onchain <span className="text-didit-primary italic">bounties</span>
           </h1>
-          <p className="text-white/60 text-lg">Contribute to the Sui ecosystem and earn rewards.</p>
+          <p className="text-white/60 text-lg">prove you did it. get paid in SUI.</p>
         </div>
 
         {/* Search & Filters Container */}
@@ -137,7 +137,7 @@ export default function BountiesPage() {
             </div>
             <input 
               className="w-full bg-didit-background-dark/50 border border-white/10 rounded-xl py-4 pl-12 pr-4 text-white placeholder:text-white/30 focus:outline-none focus:border-didit-primary/50 transition-colors" 
-              placeholder="Search by project, task, or keyword..." 
+              placeholder="search bounties, creators, or categories..." 
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -149,13 +149,13 @@ export default function BountiesPage() {
               <button 
                 key={status}
                 onClick={() => setSelectedStatus(status)}
-                className={`px-6 py-2 rounded-full font-bold text-sm transition-all capitalize ${
+                className={`px-6 py-2 rounded-full font-bold text-sm transition-all ${
                   selectedStatus === status 
                     ? "bg-didit-primary text-didit-background-dark neon-glow" 
                     : "bg-white/5 border border-white/10 text-white/70 hover:bg-white/10"
                 }`}
               >
-                {status === "all" ? "All" : status}
+                {status === "all" ? "all bounties" : status}
               </button>
             ))}
           </div>
@@ -219,7 +219,7 @@ export default function BountiesPage() {
             </div>
             <span className="font-bold uppercase tracking-widest text-sm">didit marketplace</span>
           </div>
-          <p className="text-white/30 text-xs font-medium">Built with precision on the Sui Blockchain. © 2024 didit labs.</p>
+          <p className="text-white/30 text-xs font-medium">powered by Sui. proof on Walrus. built different.</p>
           <div className="flex gap-6 text-white/50">
             <a href="#" className="hover:text-didit-primary transition-colors"><Globe className="h-5 w-5" /></a>
             <a href="#" className="hover:text-didit-primary transition-colors"><MessageCircle className="h-5 w-5" /></a>

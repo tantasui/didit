@@ -191,13 +191,13 @@ export default function LeaderboardPage() {
               href="/bounties"
               className="inline-flex items-center justify-center rounded-full bg-didit-primary text-didit-background-dark px-8 py-3 font-bold hover:brightness-110 transition-all"
             >
-              Explore Bounties
+              explore bounties
             </Link>
             <Link
               href="/profile"
               className="inline-flex items-center justify-center rounded-full bg-white/5 border border-white/10 px-8 py-3 font-bold hover:bg-white/10 transition-all"
             >
-              View Profile
+              view profile
             </Link>
           </div>
         </div>

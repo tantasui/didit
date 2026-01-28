@@ -3,3 +3,5 @@ build/*
 Move.lock
 build
 .trae
+poidh-app/*
+prompt.txt

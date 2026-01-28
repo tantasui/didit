@@ -19,6 +19,7 @@ public struct Bounty has key, store {
   created_at: u64,
   submissions: Table<address, BountyProof>,
   votes_by_voter: Table<address, address>, // voter -> submission submitter
+  votes_by_voter: Table<address, address>, // voter -> submission submitter
   vote_counts: Table<address, u64>, // submission submitter -> votes
   winners: VecMap<u64, address>, // Maps position index -> winner address
   no_of_submissions: u64,
@@ -306,6 +307,7 @@ public fun award_bounty(
 
   // Get reward amount
   let amount = *vector::borrow(&bounty.prize_schedule, position_index);
+
 
   // Pay the winner
   let payment = coin::take(&mut bounty.balance, amount, ctx);

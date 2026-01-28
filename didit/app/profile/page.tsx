@@ -262,13 +262,13 @@ export default function ProfilePage() {
                 className="flex-1 lg:flex-none flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-didit-primary text-didit-background-dark hover:shadow-[0_0_20px_rgba(242,127,13,0.4)] transition-all font-bold text-sm h-auto"
               >
                 <Plus className="h-4 w-4" />
-                Create Bounty
+                create bounty
               </Button>
               <Link
                 href="/bounties"
                 className="flex-1 lg:flex-none flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-all font-bold text-sm"
               >
-                Explore
+                explore
               </Link>
             </div>
           </div>
@@ -329,7 +329,7 @@ export default function ProfilePage() {
                   : "border-transparent text-slate-500 hover:text-slate-300"
               }`}
             >
-              Participated
+              entries
             </button>
             <button
               type="button"
@@ -340,7 +340,7 @@ export default function ProfilePage() {
                   : "border-transparent text-slate-500 hover:text-slate-300"
               }`}
             >
-              Created
+              created
             </button>
             <button
               type="button"
@@ -351,7 +351,7 @@ export default function ProfilePage() {
                   : "border-transparent text-slate-500 hover:text-slate-300"
               }`}
             >
-              Saved
+              saved
             </button>
           </div>
           <div className="flex items-center gap-4 pb-4">
@@ -421,7 +421,7 @@ export default function ProfilePage() {
             {activeTab === "created" &&
               (createdBounties.length === 0 ? (
                 <div className="col-span-full text-center py-20 text-white/50 text-lg">
-                  No bounties created yet.
+                  no bounties created yet
                 </div>
               ) : (
                 createdBounties.map((bounty) => (
