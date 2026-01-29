@@ -24,7 +24,7 @@ export default function HomePage() {
             Did <span className="text-didit-primary">It?</span>
           </h1>
           <p className="max-w-2xl text-lg md:text-xl text-slate-400 mb-10 leading-relaxed">
-            onchain bounties for fun, art, public goods, & food. <br className="hidden md:block" />
+            onchain bounties for anything<br className="hidden md:block" />
             prove you did it. get paid in SUI.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
