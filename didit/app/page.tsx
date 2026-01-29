@@ -24,7 +24,7 @@ export default function HomePage() {
             Did <span className="text-didit-primary">It?</span>
           </h1>
           <p className="max-w-2xl text-lg md:text-xl text-slate-400 mb-10 leading-relaxed">
-            onchain bounties for anything. <br className="hidden md:block" />
+            onchain bounties for fun, art, public goods, & food. <br className="hidden md:block" />
             prove you did it. get paid in SUI.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
@@ -73,7 +73,7 @@ export default function HomePage() {
               <div className="size-14 rounded-full bg-didit-primary/20 flex items-center justify-center mb-6 text-didit-primary group-hover:scale-110 transition-transform">
                 <Briefcase className="w-8 h-8" />
               </div>
-              <h3 className="text-xl font-bold mb-3">freelancers</h3>
+              <h3 className="text-xl font-bold mb-3">artists & builders</h3>
               <p className="text-slate-400 mb-8 leading-relaxed">find gigs, submit proof, get paid instantly.</p>
               <button onClick={() => setShowCreateModal(true)} className="w-full py-3 rounded-full bg-white/5 border border-white/10 hover:bg-didit-primary hover:text-didit-background-dark font-bold transition-all">explore</button>
             </div>
